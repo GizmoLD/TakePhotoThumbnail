@@ -1,5 +1,5 @@
 package com.example.takephotothumbnail;
-
+// takePhotoThumbnailClon
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
@@ -17,8 +17,10 @@ import android.widget.ImageView;
 
 public class MainActivity extends AppCompatActivity {
     private Button button;
+    private Button galeria;
     private ImageView imageView;
-    private ActivityResultLauncher<Intent> someActivityResultLauncher;
+    private ActivityResultLauncher<Intent> takePictureLauncher;
+    private ActivityResultLauncher<Intent> pickImageLauncher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,8 +29,10 @@ public class MainActivity extends AppCompatActivity {
 
         imageView = findViewById(R.id.imageView);
         button = findViewById(R.id.button);
+        galeria = findViewById(R.id.galeria);
 
-        someActivityResultLauncher = registerForActivityResult(
+        // Lanzador para la captura de fotos
+        takePictureLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 new ActivityResultCallback<ActivityResult>() {
                     @Override
@@ -42,16 +46,45 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
 
+        // Lanzador para seleccionar imágenes desde la galería
+        pickImageLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                new ActivityResultCallback<ActivityResult>() {
+                    @Override
+                    public void onActivityResult(ActivityResult result) {
+                        if (result.getResultCode() == RESULT_OK) {
+                            // Manejar la imagen seleccionada desde la galería
+                            // Puedes acceder a la URI de la imagen desde result.getData()
+                        }
+                    }
+                });
+
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dispatchTakePictureIntent();
             }
         });
+
+        galeria.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openSomeActivityForResult();
+            }
+        });
     }
 
     private void dispatchTakePictureIntent() {
         Intent takePictureIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-        someActivityResultLauncher.launch(takePictureIntent);
+        takePictureLauncher.launch(takePictureIntent);
+    }
+
+    public void openSomeActivityForResult() {
+        // Crear Intent para seleccionar imágenes desde la galería
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType("image/*");
+        intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
+        // Lanzar actividad para obtener el resultado
+        pickImageLauncher.launch(intent);
     }
 }
