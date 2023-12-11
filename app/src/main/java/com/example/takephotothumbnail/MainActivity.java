@@ -21,7 +21,6 @@ public class MainActivity extends AppCompatActivity {
     private ImageView imageView;
     private ActivityResultLauncher<Intent> takePictureLauncher;
     private ActivityResultLauncher<Intent> pickImageLauncher;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,8 +52,11 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onActivityResult(ActivityResult result) {
                         if (result.getResultCode() == RESULT_OK) {
-                            // Manejar la imagen seleccionada desde la galería
-                            // Puedes acceder a la URI de la imagen desde result.getData()
+                            // There are no request codes
+                            Intent data = result.getData();
+                            Uri uri = data.getData();
+                            ImageView imageView = findViewById(R.id.imageView);
+                            imageView.setImageURI(uri);
                         }
                     }
                 });
