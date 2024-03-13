@@ -92,6 +92,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+    //
 
     private File createImageFile() throws IOException {
         // Crear un nombre de archivo único
